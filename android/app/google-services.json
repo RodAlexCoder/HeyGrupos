@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "216053261421",
+    "project_id": "heygrupos-e4d3d",
+    "storage_bucket": "heygrupos-e4d3d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:216053261421:android:7e472a9cc1b72e04134b64",
+        "android_client_info": {
+          "package_name": "com.heygrupos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "216053261421-mg9da38vjhta2e43tobuq89b8lb39pvh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpI-bPbzXOTRVo4bhOU74AG1hGNtrqPpc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "216053261421-mg9da38vjhta2e43tobuq89b8lb39pvh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

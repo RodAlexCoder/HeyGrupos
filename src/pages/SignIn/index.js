@@ -6,6 +6,7 @@ export default function SignIn() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [type, setType] = useState(false)
 
 
   return (
@@ -14,13 +15,15 @@ export default function SignIn() {
 
       <Text style={{ marginBottom: 20 }}>ajude, colabore, faça networking!</Text>
 
-      <TextInput
+    { type && ( 
+    
+    <TextInput
         style={styles.input}
         value={name}
         onChangeText={(text) => setName(text)}
         placeholder="Qual o Seu Nome"
         placeholderTextColor='#9999B'
-      />
+      />)}
 
       <TextInput
         style={styles.input}
@@ -38,12 +41,12 @@ export default function SignIn() {
         placeholderTextColor='#9999B'
       />
 
-      <TouchableOpacity style={styles.buttonLogin}>
-            <Text style={styles.buttonText}>Acessar</Text>
+      <TouchableOpacity style={[styles.buttonLogin, {backgroundColor: type ? '#F53745' : '#57DD86'}]}>
+            <Text style={styles.buttonText}>{type ? 'Cadastrar' : 'Acessar'}</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity>
-          <Text>Criar uma nova conta</Text>
+      <TouchableOpacity onPress={ () => setType(!type)}>
+          <Text>{type ? 'Já  possuo uma conta' : 'Criar uma Conta'}</Text>
       </TouchableOpacity>
 
     </SafeAreaView>
@@ -75,7 +78,6 @@ const styles = StyleSheet.create({
   },
   buttonLogin: {
     width: '90%',
-    backgroundColor: '#121212',
     height: 50,
     justifyContent: 'center', 
     alignItems: 'center', 
