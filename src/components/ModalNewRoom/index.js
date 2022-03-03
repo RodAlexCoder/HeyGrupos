@@ -1,9 +1,47 @@
 import React , {useState} from 'react'
 import {View, Text, StyleSheet, TextInput, TouchableOpacity, TouchableWithoutFeedback} from 'react-native'
+import firestore from '@react-native-firebase/firestore'
+import auth from '@react-native-firebase/auth'
+
 
 function ModalNewRoom({setVisible}) {
 
     const [roomName, setRoomName] = useState('')
+
+    const user = auth().currentUser.toJSON()
+
+    function handleButtonCreate(){
+        if(roomName === '') return
+
+        createRoom()
+    }
+
+    function createRoom(){
+        firestore()
+        .collection('MESSAGE_THREAD')
+        .add({
+            name: roomName,
+            owner: user.uid,
+            lastMessage: {
+                text: `Grupo ${roomName} criado. Bem Vindo(a)!`,
+                createdAt: firestore.FieldValue.serverTimestamp(),
+            }
+        })
+        .then((docRef) => {
+            docRef.collection('MESSAGES').add({
+                text: `Grupo ${roomName} criado. Bem Vindo(a)!`,
+                createdAt: firestore.FieldValue.serverTimestamp(),
+                system: true
+            }).then(()=>{
+               setVisible() 
+            })            
+        })
+
+        .catch((error) => {
+            console.log(error)
+        })
+    }
+    
     
   return (
     <View style={styles.container}>
@@ -22,8 +60,12 @@ function ModalNewRoom({setVisible}) {
                 style={styles.input}
             />
 
-            <TouchableOpacity style={styles.buttonArea}>
+            <TouchableOpacity style={styles.buttonArea} onPress={handleButtonCreate}>
                 <Text style={styles.buttonText}>Criar sala</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => {setVisible}} style={styles.backButton}>
+                    <Text>Voltar</Text>
             </TouchableOpacity>
         </View>
         
@@ -73,5 +115,10 @@ const styles = StyleSheet.create({
         fontSize: 19,
         fontWeight: 'bold',
         color: '#FFF'
+    },
+    backButton:{
+        marginTop: 15,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 })
