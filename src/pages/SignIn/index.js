@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, TextInput , SafeAreaView, Platform} from 'react-native'
+import auth from '@react-native-firebase/auth'
+import {useNavigation} from '@react-navigation/native'
 
 export default function SignIn() {
 
@@ -7,6 +9,54 @@ export default function SignIn() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [type, setType] = useState(false)
+
+  const navigation = useNavigation()
+
+  function handleLogin(){
+      if(type){
+        console.log('Cadastrar user')
+        if(name === '' || email === '' || password === '') return
+
+        auth()
+        .createUserWithEmailAndPassword(email, password)
+        //Quando é criado um usuario, ele retorna um user, e existe uma prorpriedade chamada displayName: que pode receber o name
+        .then((user)=>{
+            user.user.updateProfile({
+              displayName: name
+            })
+            .then(()=>{
+              navigation.goBack()
+            })
+        })
+        .catch((error) => {
+            if(error.code === 'auth/email-already-in-use') {
+              alert("Email já em uso")
+            }
+
+            if(error.code === 'auth/invalid-email') {
+              alert("Email Invalido")
+            }
+        })
+
+      }else {
+        //Logar um usuario
+
+        auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(()=>{
+          navigation.goBack()
+        })
+        .catch((error) => {
+          if(error.code === 'auth/email-already-in-use') {
+            alert("Email já em uso")
+          }
+
+          if(error.code === 'auth/invalid-email') {
+            alert("Email Invalido")
+          }
+        })
+      }
+  }
 
 
   return (
@@ -39,9 +89,13 @@ export default function SignIn() {
         onChangeText={(text) => setPassword(text)}
         placeholder="Sua Senha"
         placeholderTextColor='#9999B'
+        secureTextEntry={true}
       />
 
-      <TouchableOpacity style={[styles.buttonLogin, {backgroundColor: type ? '#F53745' : '#57DD86'}]}>
+      <TouchableOpacity 
+      style={[styles.buttonLogin, {backgroundColor: type ? '#F53745' : '#57DD86'}]}
+      onPress={handleLogin}
+      >
             <Text style={styles.buttonText}>{type ? 'Cadastrar' : 'Acessar'}</Text>
       </TouchableOpacity>
 
