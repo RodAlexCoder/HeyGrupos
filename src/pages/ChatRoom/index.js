@@ -1,9 +1,10 @@
 import React, {useState} from 'react'
-import {View, Text, StyleSheet, Button, SafeAreaView, TouchableOpacity, FlatList} from 'react-native'
+import {View, Text, StyleSheet, Button, SafeAreaView, TouchableOpacity, FlatList, Modal} from 'react-native'
 import auth from '@react-native-firebase/auth'
 import {useNavigation} from '@react-navigation/native'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import FabButton from '../../components/FabButton' 
+import ModalNewRoom from '../../components/ModalNewRoom'
 
 export default function ChatRoom() {
 
@@ -38,6 +39,13 @@ export default function ChatRoom() {
           </View>
 
           <FabButton setVisible={() => setModalVisible(true)} />
+
+
+          <Modal 
+          visible={modalVisible} animationType='slide' transparent={true}
+          >
+            <ModalNewRoom setVisible={() => setModalVisible(false)}/>
+          </Modal>
     </SafeAreaView>
   )
 }

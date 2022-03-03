@@ -1,11 +1,11 @@
 import React from 'react'
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native'
 
-function FabButton({setVisibe}) {
+function FabButton({setVisible}) {
 
 
     function handleNavigateButton(){
-        setVisibe()
+        setVisible()
     }
 
 
