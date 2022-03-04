@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {View, Text, StyleSheet, Button, SafeAreaView, TouchableOpacity, FlatList, Modal, ActivityIndicator} from 'react-native'
+import {View, Text, StyleSheet, Button, SafeAreaView, TouchableOpacity, FlatList, Modal, ActivityIndicator, Alert} from 'react-native'
 import auth from '@react-native-firebase/auth'
 import {useNavigation, useIsFocused} from '@react-navigation/native'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -8,9 +8,10 @@ import ModalNewRoom from '../../components/ModalNewRoom'
 import firestore from '@react-native-firebase/firestore'
 import ChatList from '../../components/ChatList'
 
+
 export default function ChatRoom() {
 
-  const navigation = useNavigation()
+
   const isFocused = useIsFocused()
 
   const [user, setUser] = useState(null)
@@ -22,8 +23,6 @@ export default function ChatRoom() {
 
   useEffect(()=>{
       const hasUser = auth().currentUser ? auth().currentUser.toJSON() : null
-      console.log(hasUser)
-
       setUser(hasUser)
 
   }, [isFocused])
@@ -50,7 +49,6 @@ export default function ChatRoom() {
           if(isActive){
             setThreads(threads)
             setLoading(false)
-            console.log(threads)
           }
           
       })
@@ -73,6 +71,36 @@ export default function ChatRoom() {
     }).catch(()=>{
         console.log('Não possui login')
     })
+  }
+
+  function deleteRoom(ownerId, idRoom){
+    //pessoa que nao é dona tentando deletar
+      if(ownerId !== user?.uid) return
+
+    Alert.alert(
+      "Atenção!",
+      "Você tem certeza que deseja deletar essa sala?",
+      [
+        {
+          text: 'Cancel',
+          onPress: ()=>{},
+          style: 'cancel'
+        },
+        {
+          text: 'ok',
+          onPress: () => handleDeleteRoom(idRoom)
+        }
+      ]
+    )
+
+  }
+
+  async function handleDeleteRoom(idRoom){
+    await firestore().collection('MESSAGE_THREAD')
+    .doc(idRoom)
+    .delete()
+
+    SetUpdateScreen(!updateScreen)
   }
 
   if(loading) {
@@ -105,11 +133,12 @@ export default function ChatRoom() {
           keyExtractor={item => item.id}
           showsHorizontalScrollIndicator={false}
           renderItem={({item}) => (
-              <ChatList data={item}/>
+              <ChatList data={item} deleteRoom={ () => deleteRoom(item.owner, item._id)} userStatus={user}/>
           )}
+          
           />
 
-          <FabButton setVisible={() => setModalVisible(true)} userStatus={user}/>
+          <FabButton setVisible={() => setModalVisible(true)} userStatus={user} />
 
 
           <Modal 
