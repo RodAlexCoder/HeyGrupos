@@ -39,6 +39,15 @@ function AppRoutes(){
                 })}
             />
 
+                <AppStack.Screen 
+                name='Search'
+                component={Search}
+
+                options={{
+                    title: 'Procurando algum grupo?'
+                }}
+            />  
+
             
 
 

@@ -11,6 +11,7 @@ import ChatList from '../../components/ChatList'
 
 export default function ChatRoom() {
 
+  const navigation = useNavigation()
 
   const isFocused = useIsFocused()
 
@@ -123,7 +124,7 @@ export default function ChatRoom() {
                     <Text style={styles.title}>Grupos</Text>
               </View>
 
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('Search')}>
                         <MaterialIcons name='search' size={28} color='#FFF'/>
               </TouchableOpacity>
           </View>
