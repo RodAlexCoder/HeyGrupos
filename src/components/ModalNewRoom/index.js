@@ -4,7 +4,7 @@ import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
 
 
-function ModalNewRoom({setVisible}) {
+function ModalNewRoom({setVisible, SetUpdateScreen}) {
 
     const [roomName, setRoomName] = useState('')
 
@@ -34,6 +34,7 @@ function ModalNewRoom({setVisible}) {
                 system: true
             }).then(()=>{
                setVisible() 
+               SetUpdateScreen()
             })            
         })
 
