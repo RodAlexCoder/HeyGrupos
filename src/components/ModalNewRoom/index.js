@@ -13,7 +13,22 @@ function ModalNewRoom({setVisible, SetUpdateScreen}) {
     function handleButtonCreate(){
         if(roomName === '') return
 
-        createRoom()
+        //Deixar apenas cada usuario criar 4 grupos
+        firestore().collection('MESSAGE_THREAD').get().then((snapshot)=>{
+            let myThreads = 0
+
+            snapshot.docs.map(docItem => {
+                if(docItem.data().owner === user.uid){
+                    myThreads += 1
+                }
+            })
+            if(myThreads >= 4 ){
+                alert('Você já atingiu o limite de grupos por usuario')
+            } else {
+                 createRoom()
+            }
+        })
+       
     }
 
     function createRoom(){
