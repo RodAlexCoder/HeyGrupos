@@ -6,6 +6,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import FabButton from '../../components/FabButton' 
 import ModalNewRoom from '../../components/ModalNewRoom'
 import firestore from '@react-native-firebase/firestore'
+import ChatList from '../../components/ChatList'
 
 export default function ChatRoom() {
 
@@ -74,7 +75,7 @@ export default function ChatRoom() {
 
   if(loading) {
     return(
-      <ActivityIndicator size={255} color='#555'/>
+      <ActivityIndicator size={25} color='#555'/>
     )
   }
 
@@ -97,6 +98,15 @@ export default function ChatRoom() {
               </TouchableOpacity>
           </View>
 
+          <FlatList 
+          data={threads}
+          keyExtractor={item => item.id}
+          showsHorizontalScrollIndicator={false}
+          renderItem={({item}) => (
+              <ChatList data={item}/>
+          )}
+          />
+
           <FabButton setVisible={() => setModalVisible(true)} userStatus={user}/>
 
 
@@ -112,6 +122,7 @@ export default function ChatRoom() {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
+      backgroundColor: '#FFF'
     },
     headerRoom: {
       flexDirection: 'row',
