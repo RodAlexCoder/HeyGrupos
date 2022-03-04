@@ -1,9 +1,51 @@
-import React, {useState} from 'react'
-import {View, Text, StyleSheet, TouchableOpacity, TextInput, SafeAreaView} from 'react-native'
+import React, {useState, useEffect} from 'react'
+import {View, Text, StyleSheet, TouchableOpacity, TextInput, SafeAreaView, Keyboard} from 'react-native'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
+import { useIsFocused } from '@react-navigation/native'
+ 
 export default function Search() {
   const [input, setInput] = useState('')
+  const [user, setUser] = useState(null)
+  const isFocused = useIsFocused()
+  const [chats, setChats] = useState([])
+  
+  
+
+  useEffect(()=> {
+      const hasUser = auth().currentUser ? auth().currentUser.toJSON() : null
+      setUser(hasUser)
+  }, [])
+
+  async function handleSearch(){
+    if(input === '') return
+
+
+    const responseSearch = firestore()
+    .collection('MESSAGE_THREAD')
+    .where('name', '>=', input)
+    .where('name', '<=', input + '\uf8ff')
+    .get()
+    .then((querySnapshot) =>{
+
+      const thread = querySnapshot.docs.map(documentSnapshot => {
+        return{
+          _id: documentSnapshot.id, 
+          name: '',
+          lastMessage: {
+            text: ''
+          },
+          ...documentSnapshot.data()
+        }
+      })
+
+      setChats(thread)
+      setInput('')
+      Keyboard.dismiss()
+
+    })
+  }
   return (
     <SafeAreaView style={styles.container}>
           <View style={styles.containerInput}>
@@ -14,7 +56,7 @@ export default function Search() {
               style={styles.input}
             />
 
-            <TouchableOpacity style={styles.buttonSearch}>
+            <TouchableOpacity style={styles.buttonSearch} onPress={handleSearch}>
                 <MaterialIcons name='search' size={30} color='#FFF'/>
             </TouchableOpacity>
           </View>
@@ -36,7 +78,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#EBEBEB',
       marginLeft: 10,
       height: 50,
-      width: '50%',
+      width: '70%',
       borderRadius: 4,
       padding: 5
     },
